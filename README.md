@@ -65,7 +65,7 @@
 
 二、在**龙芯平台**上进行模型测试，也能达到**98.23%**的准确率
 
-![image-20230813210751227](./readme.assets/image-20230813210751227.png)
+<img src="./readme.assets/image-20230813210751227.png" alt="image-20230813210751227" />
 
 三、为了增强用户的体验感，该系统具有两种可选的可视化界面
 
@@ -73,7 +73,7 @@
 
 <img src="./readme.assets/image-20230813214948708.png" alt="image-20230813214948708" />
 
-![](./readme.assets/Snipaste_2023-08-13_21-51-31.png)
+<img src="./readme.assets/Snipaste_2023-08-13_21-51-31.png" />
 
 ###### WEB界面：界面优美、系统占用率略高
 
