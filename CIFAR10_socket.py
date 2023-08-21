@@ -44,7 +44,7 @@ class Cifar10:
         torch.manual_seed(88)
         self.writer = SummaryWriter()
         self.model_path = 'model/top1.pt'
-        self.device = torch.device("cpu")
+        self.device = torch.device("cuda:0")
         self.ds_train = None
         self.ds_test = None
 
@@ -131,7 +131,7 @@ class Cifar10:
                 momentum=0.9,
                 weight_decay=3e-4
             )
-            checkpoint = torch.load(self.model_path,map_location=torch.device('cpu'))
+            checkpoint = torch.load(self.model_path,map_location=self.device)
             model.load_state_dict(checkpoint['model_state_dict'])
             cur_epoch = checkpoint['epoch']
             optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
@@ -195,9 +195,9 @@ class Cifar10:
             genotype = translator([code, code], max_node=int((len(net) / 4)))
             model = Network(128, 10, 24, True, genotype).to(self.device)
 
-            checkpoint = torch.load('./model/top1.pt',map_location=torch.device('cpu'))
+            checkpoint = torch.load('./model/top1.pt',map_location=self.device)
             model.load_state_dict(checkpoint['model_state_dict'])
-            criterion = nn.CrossEntropyLoss().to(self.device)
+            criterion = nn.CrossEntropyLoss().to(torch.device('cuda:0'))
 
             CIFAR_MEAN = [0.49139968, 0.48215827, 0.44653124]
             CIFAR_STD = [0.24703233, 0.24348505, 0.26158768]
@@ -220,7 +220,8 @@ class Cifar10:
 
             with torch.no_grad(), tqdm(total=len(valid_queue), file=modifyStream) as pbar:
                 for step, (x, target) in enumerate(valid_queue):
-
+                    x = x.cuda()
+                    target = target.cuda(non_blocking=True)
                     logits, _ = model(x)
                     loss = criterion(logits, target)
                     pred = logits.argmax(dim=1)
