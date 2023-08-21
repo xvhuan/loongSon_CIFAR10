@@ -28,7 +28,7 @@ class Cifar10:
         torch.manual_seed(88)
         self.writer = SummaryWriter()
         self.model_path = 'model/top1.pt'
-        self.device = torch.device("cpu")
+        self.device = torch.device("cuda:0")
         self.ds_train = None
         self.ds_test = None
 
@@ -188,6 +188,9 @@ class Cifar10:
 
             with torch.no_grad(), tqdm(total=len(valid_queue)) as pbar:
                 for step, (x, target) in enumerate(valid_queue):
+                    x = x.cuda()
+                    target = target.cuda(non_blocking=True)
+
                     logits, _ = model(x)
                     loss = criterion(logits, target)
                     pred = logits.argmax(dim=1)
